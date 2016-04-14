@@ -5,9 +5,9 @@ When this project is cloned, this folder may look empty. To retrieve what it con
 * "git submodule update"
 
 How to compile and run the application using the terminal:
-* "mkdir bin"
-* "make"
-* "make run"
+1. "mkdir bin"
+2. "make"
+3. "make run"
 
 Or, instead of 2 and 3: "make sense" =)
 
