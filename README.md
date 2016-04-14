@@ -1,6 +1,8 @@
 # Dynamic-Tessellation
+The application is compiled and tested only on OSX.
+
 This project utilizes the OpenGL Graphics Engine as a submodule.
-When this project is cloned, this folder may look empty. To retrieve what it contains and get the latest update, run these commands in the terminal:
+When this project is cloned, this folder containign the submodule may look empty. To retrieve what it contains and get the latest update, run these commands in the terminal:
 * "git submodule init"
 * "git submodule update"
 
