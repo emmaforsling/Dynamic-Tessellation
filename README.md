@@ -4,7 +4,7 @@ When this project is cloned, this folder may look empty. To retrieve what it con
 * "git submodule init"
 * "git submodule update"
 
-How to comile and run the application using the terminal:
+How to compile and run the application using the terminal:
 1. "mkdir bin"
 2. "make"
 3. "make run"
