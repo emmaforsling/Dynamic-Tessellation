@@ -122,12 +122,13 @@ bool initScene(void)
 	Mesh* tempMesh1 = new Mesh();
 	tempMesh1->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
 	
-//    tempMesh1->setProgramID(LoadShaders( "shaders/tessellation/vertexshader.glsl",
-//                                                    "shaders/tessellation/tessellationcontrolshader.glsl",
-//                                                    "shaders/tessellation/tessellationevaluationshader.glsl",
-//                                                    "shaders/tessellation/geometryshader.glsl",
-//                                                    "shaders/tessellation/fragmentshader.glsl" ));
+    tempMesh1->setProgramID(LoadShaders( "shaders/tessellation/vertexshader.glsl",
+                                                    "shaders/tessellation/tessellationcontrolshader.glsl",
+                                                    "shaders/tessellation/tessellationevaluationshader.glsl",
+                                                    "shaders/tessellation/geometryshader.glsl",
+                                                    "shaders/tessellation/fragmentshader.glsl" ));
     
+    tempMesh1->setIsTessellationActive(true);
 	// tempMesh1->setProgramID(LoadShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl"));
 	tempMesh1->initOBJ("assets/susanne.obj");
 	tempMesh1->setTexture("assets/textures/monkey_tex.png");
