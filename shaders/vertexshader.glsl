@@ -22,4 +22,5 @@ void main()
 	uv = uvCoordinates;
 	// TODO: Is this really in world space...?
 	normal_ws = vec3(transpose(inverse(M)) * vec4(vertexNormal_ms, 1.0));
+	//normal_ws = mat3(M) * vertexNormal_ms;
 }
