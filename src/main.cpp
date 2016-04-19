@@ -123,16 +123,17 @@ bool initScene(void)
 	tempMesh1->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
 	
     tempMesh1->setProgramID(LoadShaders( "shaders/tessellation/vertexshader.glsl",
-                                                    "shaders/tessellation/tessellationcontrolshader.glsl",
-                                                    "shaders/tessellation/tessellationevaluationshader.glsl",
-                                                    "shaders/tessellation/geometryshader.glsl",
-                                                    "shaders/tessellation/fragmentshader.glsl" ));
+                                         "shaders/tessellation/tessellationcontrolshader.glsl",
+                                         "shaders/tessellation/tessellationevaluationshader.glsl",
+                                         "shaders/tessellation/geometryshader.glsl",
+                                         "shaders/tessellation/fragmentshader.glsl" ));
     
     tempMesh1->setIsTessellationActive(true);
-	// tempMesh1->setProgramID(LoadShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl"));
-	tempMesh1->initOBJ("assets/susanne.obj");
-	tempMesh1->setTexture("assets/textures/monkey_tex.png");
-	tempMesh1->setMaterialProperties(0.85, 0.15, 10.0);	// diffuse and specular coeff, specular power
+	tempMesh1->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
+	tempMesh1->setDispMap("assets/textures/dispMap.png");
+	tempMesh1->setNormMap("assets/textures/normMap.png");
+	tempMesh1->setColorMap("assets/textures/bunny_tex.png");
+	tempMesh1->setMaterialProperties(0.5, 0.5, 40.0);	// diffuse and specular coeff, specular power
 	tempMesh1->setPosition(-1.5, 0.0, 0.0);
 	scene->addMesh(tempMesh1);
 
@@ -140,7 +141,9 @@ bool initScene(void)
 	Mesh* tempMesh2 = new Mesh();
 	tempMesh2->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
 	tempMesh2->initOBJ("assets/sphere.obj");
-	tempMesh2->setTexture("assets/textures/bunny_tex.png");
+	tempMesh2->setDispMap("assets/textures/dispMap.png");
+	tempMesh2->setNormMap("assets/textures/normMap.png");
+	tempMesh2->setColorMap("assets/textures/bunny_tex.png");
 	tempMesh2->setMaterialProperties(0.50, 0.50, 40.0);	// diffuse and specular coeff, specular power
 	tempMesh2->setPosition(2.0, 0.0, 0.0);
 	scene->addMesh(tempMesh2);
