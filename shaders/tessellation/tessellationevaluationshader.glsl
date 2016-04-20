@@ -14,33 +14,38 @@ in vec2 tcTexCoord[];
 out vec3 tePosition;
 out vec3 teNormal;
 out vec2 teTexCoord;
-out vec3 tePatchDistance;
 
+/**
+*	Functions interpolate2D and interpolate3D
+*	perform linear interpolation of vectors that uses the barycentric tessellation
+*	coordinates as weights. The output vectors are in cartesian coordinates. 
+**/
 vec2 interpolate2D(vec2 v0, vec2 v1, vec2 v2)
 {
    	return vec2(gl_TessCoord.x) * v0 + vec2(gl_TessCoord.y) * v1 + vec2(gl_TessCoord.z) * v2;
 }
-
 vec3 interpolate3D(vec3 v0, vec3 v1, vec3 v2)
 {
    	return vec3(gl_TessCoord.x) * v0 + vec3(gl_TessCoord.y) * v1 + vec3(gl_TessCoord.z) * v2;
 }
 
-// Builds one point
+/**
+*	Main function
+*	Builds one point
+**/
 void main()
-{
-	vec3 p0 = gl_TessCoord.x * tcPosition[0];
-	vec3 p1 = gl_TessCoord.y * tcPosition[1];
-	vec3 p2 = gl_TessCoord.z * tcPosition[2];
-
-	tePatchDistance = gl_TessCoord;
-	tePosition = p0 + p1 + p2;
-
+{	
+	// Calculate the position, normal and texture coordiantes for the new point created in the triangle
+	tePosition = interpolate3D(tcPosition[0], tcPosition[1], tcPosition[2]);
 	teNormal = interpolate3D(tcNormal[0], tcNormal[1], tcNormal[2]);
 	teTexCoord = interpolate2D(tcTexCoord[0], tcTexCoord[1], tcTexCoord[2]);
+
+	// Calculate a displacement 
 	float displacement = 0.5 * texture(dispMap, teTexCoord.xy).x;
 
+	// Add the displacement
    	tePosition += teNormal * displacement;
+	
 	gl_Position = MVP * vec4(tePosition, 1.0);
 }
 

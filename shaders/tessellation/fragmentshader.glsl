@@ -2,8 +2,6 @@
 
 // Input from the G.S.
 in vec3 gFacetNormal;
-in vec3 gTriDistance;
-in vec3 gPatchDistance;
 in float gPrimitive;
 in vec2 gTexCoord;
 in vec3 fragPos_ws;
