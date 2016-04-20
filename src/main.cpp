@@ -24,16 +24,26 @@ using namespace glm;
 bool initOpenGL(void);
 bool initScene(void);
 void initAntTweakBar(void);
+void updateTweakBar(void);
 
 // Controls
 void magicTwMouseButtonWrapper(GLFWwindow *, int, int, int);
 void magicTwMouseHoverWrapper(GLFWwindow *, double, double);
 void myFunction(void *clientData);
 
+
 // Variables
 GLFWwindow* window;
 Scene* scene;
 TwBar* tweakbar;
+
+
+//
+Mesh* tessellatedMesh;
+
+// AntTweakBar variables
+float tessScale;
+
 
 // Constants
 #define WIDTH 1024
@@ -57,7 +67,19 @@ int main(void)
 	// Render the window
 	do
 	{
+		// Clear the screen and depth buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		updateTweakBar();
+
 		scene->render(window);
+
+		// Render the AntTweakBar (after the meshes)
+		TwDraw();
+
+		// Swap buffers
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(window) == 0 );
@@ -88,7 +110,7 @@ bool initOpenGL(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow( 1024, 768, "Projekt okänt", NULL, NULL);
+	window = glfwCreateWindow( 1024, 768, "Dynamic Tessellation", NULL, NULL);
 	if( window == NULL )
 	{
 		fprintf( stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n" );
@@ -119,34 +141,34 @@ bool initScene(void)
 	scene = new Scene();
 
 	// Create and add a mesh to the scene
-	Mesh* tempMesh1 = new Mesh();
-	tempMesh1->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
+	tessellatedMesh = new Mesh();
+	tessellatedMesh->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
 	
-    tempMesh1->setProgramID(LoadShaders( "shaders/tessellation/vertexshader.glsl",
+    tessellatedMesh->setProgramID(LoadShaders( "shaders/tessellation/vertexshader.glsl",
                                          "shaders/tessellation/tessellationcontrolshader.glsl",
                                          "shaders/tessellation/tessellationevaluationshader.glsl",
                                          "shaders/tessellation/geometryshader.glsl",
                                          "shaders/tessellation/fragmentshader.glsl" ));
     
-    tempMesh1->setIsTessellationActive(true);
-	tempMesh1->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
-	tempMesh1->setDispMap("assets/textures/dispMap.png");
-	tempMesh1->setNormMap("assets/textures/normMap.png");
-	tempMesh1->setColorMap("assets/textures/bunny_tex.png");
-	tempMesh1->setMaterialProperties(0.5, 0.5, 40.0);	// diffuse and specular coeff, specular power
-	tempMesh1->setPosition(-1.5, 0.0, 0.0);
-	scene->addMesh(tempMesh1);
+    tessellatedMesh->setIsTessellationActive(true);
+	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
+	tessellatedMesh->setDispMap("assets/textures/dispMap.png");
+	tessellatedMesh->setNormMap("assets/textures/normMap.png");
+	tessellatedMesh->setColorMap("assets/textures/bunny_tex.png");
+	tessellatedMesh->setMaterialProperties(0.5, 0.5, 40.0);	// diffuse and specular coeff, specular power
+	tessellatedMesh->setPosition(-1.5, 0.0, 0.0);
+	scene->addMesh(tessellatedMesh);
 
 	// Create and add a mesh to the scene
-	Mesh* tempMesh2 = new Mesh();
-	tempMesh2->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
-	tempMesh2->initOBJ("assets/sphere.obj");
-	tempMesh2->setDispMap("assets/textures/dispMap.png");
-	tempMesh2->setNormMap("assets/textures/normMap.png");
-	tempMesh2->setColorMap("assets/textures/bunny_tex.png");
-	tempMesh2->setMaterialProperties(0.50, 0.50, 40.0);	// diffuse and specular coeff, specular power
-	tempMesh2->setPosition(2.0, 0.0, 0.0);
-	scene->addMesh(tempMesh2);
+	Mesh* notTessellatedMesh = new Mesh();
+	notTessellatedMesh->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
+	notTessellatedMesh->initOBJ("assets/sphere.obj");
+	notTessellatedMesh->setDispMap("assets/textures/dispMap.png");
+	notTessellatedMesh->setNormMap("assets/textures/normMap.png");
+	notTessellatedMesh->setColorMap("assets/textures/bunny_tex.png");
+	notTessellatedMesh->setMaterialProperties(0.50, 0.50, 40.0);	// diffuse and specular coeff, specular power
+	notTessellatedMesh->setPosition(2.0, 0.0, 0.0);
+	scene->addMesh(notTessellatedMesh);
 
 	// Mesh* cameraMesh = new Mesh();
 	// cameraMesh->initCube(0.25);
@@ -164,6 +186,10 @@ float testVariable = 10.0f;
 **/
 void initAntTweakBar(void)
 {
+
+	// Get the values for the tesselated mesh
+	tessScale = tessellatedMesh->getTessellationScale(); 	   
+
     // Scale the font, since AntTweakBar doesn't like retina displays
     TwDefine(" GLOBAL fontscaling=2 ");
 
@@ -175,16 +201,16 @@ void initAntTweakBar(void)
     // TwWindowSize(WIDTH * 1.99, HEIGHT * 1.99);			// for mac retina 15
 
     // // Create a new tweak bar (by calling TWNewBar) and set its size
-    tweakbar = TwNewBar("Emma");
-    TwDefine("Emma size='400 700'");
+    tweakbar = TwNewBar("Properties");
+    TwDefine("Properties size='400 700'");
 
     /**
     * Add variables to the tweak bar
     **/
     TwAddVarRW( tweakbar,           		// my tweak bar
-            	"That's Me",          		// name of my variable
+            	"Tesselation Scale",        // name of my variable
             	TW_TYPE_FLOAT,      		// tweak bar type
-            	&testVariable,       		// my variable
+            	&tessScale,       			// my variable
            		"min=0 max=2 step=0.05 help=':D'" 
            		);
 
@@ -220,6 +246,10 @@ void magicTwMouseButtonWrapper(GLFWwindow* window, int button, int action, int m
 void magicTwMouseHoverWrapper(GLFWwindow * window, double x, double y)
 {
     TwEventMousePosGLFW(x * 2, y * 2);
+}
+
+void updateTweakBar(void){
+	tessellatedMesh->setTessellationScale(tessScale);
 }
 
 /****************************** </AntTweakBar> *********************************/

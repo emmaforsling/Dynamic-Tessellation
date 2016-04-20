@@ -14,7 +14,37 @@ out vec3 tcPosition[];
 out vec3 tcNormal[];
 out vec2 tcTexCoord[];
 
+// Uniforms
+uniform vec3 cameraPos_ws;
+uniform float tessScale;
+
 #define ID gl_InvocationID
+
+// If camera position is near, tesselate more
+float calculateTessLevel()
+{
+    float distToCamera = length(cameraPos_ws - (tcPosition[0] + tcPosition[1] + tcPosition[2])/3.0 ) ;
+    if(distToCamera < 10.0 * tessScale && distToCamera > 5.0 * tessScale)
+    {
+        return 2.0;
+    }
+    else if(distToCamera < 5.0 * tessScale && distToCamera > 2.0 * tessScale)
+    {
+        return 4.0;
+    }
+    else if(distToCamera < 2.0 * tessScale && distToCamera > 1.0 * tessScale)
+    {
+        return 6.0;
+    }
+    else if(distToCamera < 1.0 * tessScale)
+    {
+        return 8.0;
+    }
+    else{
+        return 1.0;
+    }
+    
+}
 
 void main()
 {
@@ -23,12 +53,15 @@ void main()
     tcNormal[ID] = vNormal[ID];
     tcTexCoord[ID] = vTexCoord[ID];
     
+    
+
     // Set the tessellation levels (only at the first ID in each output patch)
     if(ID == 0)
     {
-    	gl_TessLevelInner[0] = 6.0;
-    	gl_TessLevelOuter[0] = 6.0;
-    	gl_TessLevelOuter[1] = 6.0;
-    	gl_TessLevelOuter[2] = 6.0;
+        float innerTessLevel = calculateTessLevel();
+    	gl_TessLevelInner[0] = innerTessLevel;
+    	gl_TessLevelOuter[0] = innerTessLevel;
+    	gl_TessLevelOuter[1] = innerTessLevel;
+    	gl_TessLevelOuter[2] = innerTessLevel;
     }
 }
