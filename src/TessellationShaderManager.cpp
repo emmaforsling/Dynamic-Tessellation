@@ -17,8 +17,8 @@ using namespace std;
  * Function LoadShaders(...) - Tessellation shaders
  **/
 GLuint LoadShaders(const char * vertex_file_path,
-                   const char * Tessellation_control_file_path,
-                   const char * Tessellation_evaluation_file_path,
+                   const char * tessellation_control_file_path,
+                   const char * tessellation_evaluation_file_path,
                    const char * geometry_file_path,
                    const char * fragment_file_path )
 {
@@ -46,7 +46,7 @@ GLuint LoadShaders(const char * vertex_file_path,
     
     // 2. Read the Tessellation Control Shader code from the file
     std::string TessellationControlShaderCode;
-    std::ifstream TessellationControlShaderStream(Tessellation_control_file_path, std::ios::in);
+    std::ifstream TessellationControlShaderStream(tessellation_control_file_path, std::ios::in);
     if(TessellationControlShaderStream.is_open()){
         std::string Line = "";
         while(getline(TessellationControlShaderStream, Line))
@@ -56,7 +56,7 @@ GLuint LoadShaders(const char * vertex_file_path,
     
     // 3. Read the Tessellation Evaluation Shader code from the file
     std::string TessellationEvaluationShaderCode;
-    std::ifstream TessellationEvaluationShaderStream(Tessellation_evaluation_file_path, std::ios::in);
+    std::ifstream TessellationEvaluationShaderStream(tessellation_evaluation_file_path, std::ios::in);
     if(TessellationEvaluationShaderStream.is_open()){
         std::string Line = "";
         while(getline(TessellationEvaluationShaderStream, Line))
@@ -104,7 +104,7 @@ GLuint LoadShaders(const char * vertex_file_path,
     }
     
     // 2. Compile Tessellation Control Shader
-    printf("Compiling shader : %s\n", Tessellation_control_file_path);
+    printf("Compiling shader : %s\n", tessellation_control_file_path);
     char const * TessellationControlSourcePointer = TessellationControlShaderCode.c_str();
     glShaderSource(TessellationControlID, 1, &TessellationControlSourcePointer , NULL);
     glCompileShader(TessellationControlID);
@@ -119,7 +119,7 @@ GLuint LoadShaders(const char * vertex_file_path,
     }
     
     // 3. Compile Tessellation Evaluation Shader
-    printf("Compiling shader : %s\n", Tessellation_evaluation_file_path);
+    printf("Compiling shader : %s\n", tessellation_evaluation_file_path);
     char const * TessellationEvaluationSourcePointer = TessellationEvaluationShaderCode.c_str();
     glShaderSource(TessellationEvaluationID, 1, &TessellationEvaluationSourcePointer , NULL);
     glCompileShader(TessellationEvaluationID);
