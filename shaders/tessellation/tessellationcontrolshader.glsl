@@ -26,9 +26,9 @@ void main()
     // Set the tessellation levels (only at the first ID in each output patch)
     if(ID == 0)
     {
-    	gl_TessLevelInner[0] = 6.0;
-    	gl_TessLevelOuter[0] = 6.0;
-    	gl_TessLevelOuter[1] = 6.0;
-    	gl_TessLevelOuter[2] = 6.0;
+    	gl_TessLevelInner[0] = 2.0;
+    	gl_TessLevelOuter[0] = 2.0;
+    	gl_TessLevelOuter[1] = 2.0;
+    	gl_TessLevelOuter[2] = 2.0;
     }
 }

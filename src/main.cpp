@@ -129,12 +129,13 @@ bool initScene(void)
                                          "shaders/tessellation/fragmentshader.glsl" ));
     
     tempMesh1->setIsTessellationActive(true);
-	tempMesh1->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
+	tempMesh1->initOBJ("extern/OpenGL_Graphics_Engine/assets/susanne.obj");
 	tempMesh1->setDispMap("assets/textures/dispMap.png");
 	tempMesh1->setNormMap("assets/textures/normMap.png");
 	tempMesh1->setColorMap("assets/textures/bunny_tex.png");
 	tempMesh1->setMaterialProperties(0.5, 0.5, 40.0);	// diffuse and specular coeff, specular power
 	tempMesh1->setPosition(-1.5, 0.0, 0.0);
+	tempMesh1->addFloatUniform("tessScale", 1.0);
 	scene->addMesh(tempMesh1);
 
 	// Create and add a mesh to the scene
