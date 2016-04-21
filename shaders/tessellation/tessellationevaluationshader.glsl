@@ -40,8 +40,12 @@ void main()
 	teNormal = interpolate3D(tcNormal[0], tcNormal[1], tcNormal[2]);
 	teTexCoord = interpolate2D(tcTexCoord[0], tcTexCoord[1], tcTexCoord[2]);
 
+	// Stretch texture coordinates to fit a sphere
+	float tu = teNormal.x / 2.0 + 0.5;
+    float tv = teNormal.y / 2.0 + 0.5;
+
 	// Calculate a displacement 
-	float displacement = 0.5 * texture(dispMap, teTexCoord.xy).x;
+	float displacement = 0.5 * texture(dispMap, vec2(tu, tv)).x;
 
 	// Add the displacement
    	tePosition += teNormal * displacement;
