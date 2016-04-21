@@ -13,10 +13,12 @@ uniform vec3 lightPosition;
 out vec3 vPosition;
 out vec3 vNormal;
 out vec2 vTexCoord;
+out vec3 fragPos_ws;
 
 void main()
 {
 	vPosition = vertexPos_ms;
 	vNormal = normalize(vertexNormal_ms); //(M * vec4(vertexNormal_ms, 0.0)).xyz;
 	vTexCoord = uvCoordinates;
+	fragPos_ws = vec3(M * vec4(vPosition,1.0)).xyz;
 }

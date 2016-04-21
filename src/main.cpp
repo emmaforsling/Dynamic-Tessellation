@@ -31,18 +31,15 @@ void magicTwMouseButtonWrapper(GLFWwindow *, int, int, int);
 void magicTwMouseHoverWrapper(GLFWwindow *, double, double);
 void myFunction(void *clientData);
 
-
 // Variables
 GLFWwindow* window;
 Scene* scene;
 TwBar* tweakbar;
 
-
-//
 Mesh* tessellatedMesh;
 
 // AntTweakBar variables
-float tessScale;
+float tessScale = 1.0;
 
 
 // Constants
@@ -151,12 +148,13 @@ bool initScene(void)
                                          "shaders/tessellation/fragmentshader.glsl" ));
     
     tessellatedMesh->setIsTessellationActive(true);
-	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
+	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/susanne.obj");
 	tessellatedMesh->setDispMap("assets/textures/dispMap.png");
 	tessellatedMesh->setNormMap("assets/textures/normMap.png");
 	tessellatedMesh->setColorMap("assets/textures/bunny_tex.png");
 	tessellatedMesh->setMaterialProperties(0.5, 0.5, 40.0);	// diffuse and specular coeff, specular power
-	tessellatedMesh->setPosition(-1.5, 0.0, 0.0);
+	tessellatedMesh->setPosition(0.0, 0.0, -10.0);
+	tessellatedMesh->scaleObject(5.0);
 	tessellatedMesh->addFloatUniform("tessScale", 1.0);
 	scene->addMesh(tessellatedMesh);
 
@@ -168,7 +166,7 @@ bool initScene(void)
 	notTessellatedMesh->setNormMap("assets/textures/normMap.png");
 	notTessellatedMesh->setColorMap("assets/textures/bunny_tex.png");
 	notTessellatedMesh->setMaterialProperties(0.50, 0.50, 40.0);	// diffuse and specular coeff, specular power
-	notTessellatedMesh->setPosition(2.0, 0.0, 0.0);
+	notTessellatedMesh->setPosition(7.5, 0.0, -10.0);
 	scene->addMesh(notTessellatedMesh);
 
 	// Mesh* cameraMesh = new Mesh();
@@ -187,9 +185,8 @@ float testVariable = 10.0f;
 **/
 void initAntTweakBar(void)
 {
-
 	// Get the values for the tesselated mesh
-	tessScale = tessellatedMesh->getTessellationScale(); 	   
+	//tessScale = tessellatedMesh->getTessellationScale(); 	   
 
     // Scale the font, since AntTweakBar doesn't like retina displays
     TwDefine(" GLOBAL fontscaling=2 ");
@@ -212,7 +209,7 @@ void initAntTweakBar(void)
             	"Tesselation Scale",        // name of my variable
             	TW_TYPE_FLOAT,      		// tweak bar type
             	&tessScale,       			// my variable
-           		"min=0 max=2 step=0.05 help=':D'" 
+           		"min=0 max=50 step=0.05 help=':D'" 
            		);
 
     TwAddVarRW( tweakbar,           		// my tweak bar
@@ -250,7 +247,8 @@ void magicTwMouseHoverWrapper(GLFWwindow * window, double x, double y)
 }
 
 void updateTweakBar(void){
-	tessellatedMesh->setTessellationScale(tessScale);
+	// tessellatedMesh->setTessellationScale(tessScale);
+	tessellatedMesh->updateFloatUniform("tessScale", tessScale);
 }
 
 /****************************** </AntTweakBar> *********************************/
