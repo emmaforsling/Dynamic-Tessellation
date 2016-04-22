@@ -148,7 +148,7 @@ bool initScene(void)
                                          "shaders/tessellation/fragmentshader.glsl" ));
     
     tessellatedMesh->setIsTessellationActive(true);
-	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/susanne.obj");
+	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
 	tessellatedMesh->setDispMap("assets/textures/dispMap.png");
 	tessellatedMesh->setNormMap("assets/textures/normMap.png");
 	tessellatedMesh->setColorMap("assets/textures/bunny_tex.png");

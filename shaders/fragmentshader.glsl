@@ -39,7 +39,7 @@ void main() {
 
 	float lightDist = length(lightPosition_ws - fragPos_ws);
 	float atten = min(1.0, 10.0 / lightDist);
-	
+
 	// Composite lighting contributions
     fragmentColor = atten * k_diff * diffuseLighting * texture( colorMap, uv ) + k_spec * specularLight * specularColor;
 }
