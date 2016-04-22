@@ -149,7 +149,7 @@ bool initScene(void)
     
     tessellatedMesh->setIsTessellationActive(true);
 	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
-	tessellatedMesh->setDispMap("assets/textures/dispMap.png");
+	tessellatedMesh->setDispMap("assets/textures/dispMap2.png");
 	tessellatedMesh->setNormMap("assets/textures/normMap.png");
 	tessellatedMesh->setColorMap("assets/textures/bunny_tex.png");
 	tessellatedMesh->setMaterialProperties(0.5, 0.5, 40.0);	// diffuse and specular coeff, specular power
