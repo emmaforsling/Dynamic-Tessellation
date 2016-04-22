@@ -21,7 +21,7 @@ uniform float tessScale;
 #define ID gl_InvocationID
 
 // If camera position is near, tesselate more
-float calculateTessLevel()
+float calculateTessLevelFromDist()
 {
     float distToCamera = length(cameraPos_ws - (fragPos_ws[0] + fragPos_ws[1] + fragPos_ws[2]) / 3.0 ) ;
     if(distToCamera < 40.0 * tessScale && distToCamera > 31.0 * tessScale)
@@ -66,6 +66,77 @@ float calculateTessLevel()
     }
 }
 
+float calculateTessLevelFromSize()
+{
+	// Calculate area of the triangle
+	float area = length(cross(fragPos_ws[1] - fragPos_ws[0], fragPos_ws[2] - fragPos_ws[0])) / 2.0;
+	
+	// Calculate a visility measure based on face normal and view direction
+	vec3 faceNormal = normalize(vNormal[0] + vNormal[1] + vNormal[2]);
+	vec3 centerPoint = (fragPos_ws[0] + fragPos_ws[1] + fragPos_ws[2]) / 3.0;
+	vec3 viewDirection = normalize(centerPoint - cameraPos_ws);
+	float visibilityMeasure = max(0.0, dot(-viewDirection, faceNormal));
+
+	// Calculate distance from triangle to camera
+	float cameraDistance = length(centerPoint - cameraPos_ws);
+
+	// Calculate final screen size measure
+	float screenSizeMeasure = area * visibilityMeasure / cameraDistance;
+
+	if(screenSizeMeasure < 0.005)
+	{
+		return 1.0;
+	}
+	else if(screenSizeMeasure >= 0.005 && screenSizeMeasure < 0.01)
+	{
+		return 2.0;
+	}
+	else if(screenSizeMeasure >= 0.01 && screenSizeMeasure < 0.03)
+	{
+		return 3.0;
+	}
+	else if(screenSizeMeasure >= 0.03 && screenSizeMeasure < 0.035)
+	{
+		return 3.0;
+	}
+	else if(screenSizeMeasure >= 0.035 && screenSizeMeasure < 0.040)
+	{
+		return 4.0;
+	}
+	else if(screenSizeMeasure >= 0.040 && screenSizeMeasure < 0.045)
+	{
+		return 5.0;
+	}
+	else if(screenSizeMeasure >= 0.045 && screenSizeMeasure < 0.050)
+	{
+		return 6.0;
+	}
+	else if(screenSizeMeasure >= 0.050 && screenSizeMeasure < 0.055)
+	{
+		return 7.0;
+	}
+	else if(screenSizeMeasure >= 0.055 && screenSizeMeasure < 0.060)
+	{
+		return 8.0;
+	}
+	else if(screenSizeMeasure >= 0.060 && screenSizeMeasure < 0.065)
+	{
+		return 9.0;
+	}
+	else if(screenSizeMeasure >= 0.065 && screenSizeMeasure < 0.070)
+	{
+		return 10.0;
+	}
+	else if(screenSizeMeasure >= 0.070 && screenSizeMeasure < 0.1)
+	{
+		return 11.0;
+	}
+	else if(screenSizeMeasure >= 0.1)
+	{
+		return 24.0;
+	}
+}
+
 void main()
 {
 	// Set the control points of the output patch
@@ -76,7 +147,7 @@ void main()
     // Set the tessellation levels (only at the first ID in each output patch)
     if(ID == 0)
     {
-        float innerTessLevel = calculateTessLevel();
+        float innerTessLevel = calculateTessLevelFromSize();
     	gl_TessLevelInner[0] = innerTessLevel;
     	gl_TessLevelOuter[0] = innerTessLevel;
     	gl_TessLevelOuter[1] = innerTessLevel;

@@ -14,6 +14,7 @@ in vec2 tcTexCoord[];
 out vec3 tePosition;
 out vec3 teNormal;
 out vec2 teTexCoord;
+out vec3 tePatchDistance;
 
 /**
 *	Functions interpolate2D and interpolate3D
@@ -39,6 +40,7 @@ void main()
 	tePosition = interpolate3D(tcPosition[0], tcPosition[1], tcPosition[2]);
 	teNormal = interpolate3D(tcNormal[0], tcNormal[1], tcNormal[2]);
 	teTexCoord = interpolate2D(tcTexCoord[0], tcTexCoord[1], tcTexCoord[2]);
+	tePatchDistance = gl_TessCoord;
 
 	// Stretch texture coordinates to fit a sphere
 	float tu = teNormal.x / 2.0 + 0.5;

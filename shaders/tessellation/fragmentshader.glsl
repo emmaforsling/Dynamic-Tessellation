@@ -5,6 +5,8 @@ in vec3 gFacetNormal;
 in float gPrimitive;
 in vec2 gTexCoord;
 in vec3 fragPos_ws;
+in vec3 gTriDistance;
+in vec3 gPatchDistance;
 
 // Output
 out vec4 fragColor;
@@ -16,6 +18,15 @@ uniform sampler2D colorMap;
 uniform vec3 cameraPos_ws;
 // Scalars
 uniform float k_diff, k_spec, specPow;
+
+float amplify(float d, float scale, float offset)
+{
+    d = scale * d + offset;
+    d = clamp(d, 0, 1);
+    d = 1 - exp2(-2 * d * d);
+    return d;
+}
+
 
 void main()
 {
@@ -38,5 +49,12 @@ void main()
     float atten = min(1.0, 10.0 / lightDist);
     
     // Composite lighting contributions
-    fragColor = /*atten **/ k_diff * diffuseLight * diffuseColor + k_spec * specularLight * specularColor;
+    //fragColor = /*atten **/ k_diff * diffuseLight * diffuseColor + k_spec * specularLight * specularColor;
+
+    // Display the triangles
+    vec3 triangleColors = vec3(0.1, 0.1, 0.1) + max(0.0, dot(normal_ws, -lightDirection_ws)) * vec3(1.0, 0.0, 0.0);
+    float d1 = min( min(gTriDistance.x, gTriDistance.y), gTriDistance.z );
+    float d2 = min( min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z );
+    triangleColors = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * triangleColors;
+    fragColor = vec4(triangleColors, 1.0);
 }
