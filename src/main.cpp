@@ -137,6 +137,9 @@ bool initScene(void)
 	// Initialize scene
 	scene = new Scene();
 
+	int texHeight = 1024;
+	int texWidth  = 1024;
+
 	// Create and add a mesh to the scene
 	tessellatedMesh = new Mesh();
 	tessellatedMesh->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
@@ -149,9 +152,9 @@ bool initScene(void)
     
     tessellatedMesh->setIsTessellationActive(true);
 	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
-	tessellatedMesh->setDispMap("assets/textures/dispMap.png");
-	tessellatedMesh->setNormMap("assets/textures/normMap.png");
-	tessellatedMesh->setColorMap("assets/textures/bunny_tex.png");
+	tessellatedMesh->setDispMap("assets/textures/dispMap2.png", texHeight, texWidth);
+	tessellatedMesh->setNormMap("assets/textures/normMap.png", texHeight, texWidth);
+	tessellatedMesh->setColorMap("assets/textures/bunny_tex.png", texHeight, texWidth);
 	tessellatedMesh->setMaterialProperties(0.5, 0.5, 40.0);	// diffuse and specular coeff, specular power
 	tessellatedMesh->setPosition(0.0, 0.0, -10.0);
 	tessellatedMesh->scaleObject(5.0);
@@ -162,9 +165,9 @@ bool initScene(void)
 	Mesh* notTessellatedMesh = new Mesh();
 	notTessellatedMesh->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
 	notTessellatedMesh->initOBJ("assets/sphere.obj");
-	notTessellatedMesh->setDispMap("assets/textures/dispMap.png");
-	notTessellatedMesh->setNormMap("assets/textures/normMap.png");
-	notTessellatedMesh->setColorMap("assets/textures/bunny_tex.png");
+	notTessellatedMesh->setDispMap("assets/textures/dispMap.png", texHeight, texWidth);
+	notTessellatedMesh->setNormMap("assets/textures/normMap.png", texHeight, texWidth);
+	notTessellatedMesh->setColorMap("assets/textures/bunny_tex.png", texHeight, texWidth);
 	notTessellatedMesh->setMaterialProperties(0.50, 0.50, 40.0);	// diffuse and specular coeff, specular power
 	notTessellatedMesh->setPosition(7.5, 0.0, -10.0);
 	scene->addMesh(notTessellatedMesh);

@@ -21,9 +21,10 @@ uniform float tessScale;
 #define ID gl_InvocationID
 
 // If camera position is near, tesselate more
-float calculateTessLevelFromDist()
+float calculateInnerTessLevelFromCameraDistance()
 {
     float distToCamera = length(cameraPos_ws - (fragPos_ws[0] + fragPos_ws[1] + fragPos_ws[2]) / 3.0 ) ;
+   	// Return tess level based on the measure. [TODO: rewrite!]
     if(distToCamera < 40.0 * tessScale && distToCamera > 31.0 * tessScale)
     {
         return 2.0;
@@ -66,7 +67,7 @@ float calculateTessLevelFromDist()
     }
 }
 
-float calculateTessLevelFromSize()
+float innerTessLvl_screenSize()
 {
 	// Calculate area of the triangle
 	float area = length(cross(fragPos_ws[1] - fragPos_ws[0], fragPos_ws[2] - fragPos_ws[0])) / 2.0;
@@ -81,8 +82,9 @@ float calculateTessLevelFromSize()
 	float cameraDistance = length(centerPoint - cameraPos_ws);
 
 	// Calculate final screen size measure
-	float screenSizeMeasure = area * visibilityMeasure / cameraDistance;
+	float screenSizeMeasure = area / cameraDistance;
 
+	// Return tess level based on the measure. [TODO: rewrite!]
 	if(screenSizeMeasure < 0.005)
 	{
 		return 1.0;
@@ -133,7 +135,77 @@ float calculateTessLevelFromSize()
 	}
 	else if(screenSizeMeasure >= 0.1)
 	{
-		return 24.0;
+		return 12.0;
+	}
+}
+
+
+/* 
+*  Function outerTessLvl_screenSize calculates a tessellation level per edge,
+*  based on a measure representing its size on the screen. The function makes
+*  the tessellation avoid cracks along edges shared between primitives.
+*/
+float outerTessLvl_screenSize(int _vIdx0, int _vIdx1)
+{
+	// Calculate length of edge
+	float edgeLength = length(fragPos_ws[_vIdx0] - fragPos_ws[_vIdx1]);
+
+	// Calculate mean normal of edge
+	vec3 normal = normalize(vNormal[_vIdx0] + vNormal[_vIdx1]);
+
+	// Calculate mean distance from edge to camera
+	vec3 meanPos = (fragPos_ws[_vIdx0] + fragPos_ws[_vIdx1]) / 2.0;
+	float cameraDistance = length(meanPos - cameraPos_ws);
+
+	// Calculate view direction to mean position
+	vec3 viewDirection = normalize(meanPos - cameraPos_ws);
+	
+	// Calculate visibility measure based on view direction and normal
+	float visibilityMeasure = max(0.0, dot(normal, -viewDirection));
+
+	// Calculate final screen size measure
+	float screenSizeMeasure = edgeLength * visibilityMeasure / cameraDistance;
+
+	// Return tess level based on the measure. [TODO: rewrite!]
+	if(screenSizeMeasure >= 0.025 && screenSizeMeasure < 0.08)
+	{
+		return 2.0;
+	}
+	if(screenSizeMeasure >= 0.08 && screenSizeMeasure < 0.12)
+	{
+		return 3.0;
+	}
+	if(screenSizeMeasure >= 0.12 && screenSizeMeasure < 0.16)
+	{
+		return 4.0;
+	}
+	if(screenSizeMeasure >= 0.16 && screenSizeMeasure < 0.20)
+	{
+		return 5.0;
+	}
+	if(screenSizeMeasure >= 0.20 && screenSizeMeasure < 0.24)
+	{
+		return 6.0;
+	}
+	if(screenSizeMeasure >= 0.24 && screenSizeMeasure < 0.32)
+	{
+		return 7.0;
+	}
+	if(screenSizeMeasure >= 0.32 && screenSizeMeasure < 0.44)
+	{
+		return 8.0;
+	}
+	if(screenSizeMeasure >= 0.44 && screenSizeMeasure < 0.56)
+	{
+		return 9.0;
+	}
+	if(screenSizeMeasure >= 0.56)
+	{
+		return 10.0;
+	}
+	else
+	{
+		return 1.0;
 	}
 }
 
@@ -147,10 +219,9 @@ void main()
     // Set the tessellation levels (only at the first ID in each output patch)
     if(ID == 0)
     {
-        float innerTessLevel = calculateTessLevelFromSize();
-    	gl_TessLevelInner[0] = innerTessLevel;
-    	gl_TessLevelOuter[0] = innerTessLevel;
-    	gl_TessLevelOuter[1] = innerTessLevel;
-    	gl_TessLevelOuter[2] = innerTessLevel;
+    	gl_TessLevelInner[0] = tessScale * innerTessLvl_screenSize();
+    	gl_TessLevelOuter[0] = tessScale * outerTessLvl_screenSize(1, 2);
+    	gl_TessLevelOuter[1] = tessScale * outerTessLvl_screenSize(2, 0);
+    	gl_TessLevelOuter[2] = tessScale * outerTessLvl_screenSize(0, 1);
     }
 }

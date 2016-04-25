@@ -47,7 +47,7 @@ void main()
     float tv = teNormal.y / 2.0 + 0.5;
 
 	// Calculate a displacement 
-	float displacement = 0.5 * texture(dispMap, vec2(tu, tv)).x;
+	float displacement = 0.1 * texture(dispMap, vec2(tu, tv)).x;
 
 	// Add the displacement
    	tePosition += teNormal * displacement;
