@@ -40,6 +40,7 @@ Mesh* tessellatedMesh;
 
 // AntTweakBar variables
 float tessScale = 1.0;
+float dispScale = 1.0;
 
 
 // Constants
@@ -152,13 +153,14 @@ bool initScene(void)
     
     tessellatedMesh->setIsTessellationActive(true);
 	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
-	tessellatedMesh->setDispMap("assets/textures/dispMap2.png", texHeight, texWidth);
+	tessellatedMesh->setDispMap("assets/textures/dispMap.png", texHeight, texWidth);
 	tessellatedMesh->setNormMap("assets/textures/normMap.png", texHeight, texWidth);
 	tessellatedMesh->setColorMap("assets/textures/bunny_tex.png", texHeight, texWidth);
 	tessellatedMesh->setMaterialProperties(0.5, 0.5, 40.0);	// diffuse and specular coeff, specular power
 	tessellatedMesh->setPosition(0.0, 0.0, -10.0);
 	tessellatedMesh->scaleObject(5.0);
 	tessellatedMesh->addFloatUniform("tessScale", 1.0);
+	tessellatedMesh->addFloatUniform("dispScale", 1.0);
 	scene->addMesh(tessellatedMesh);
 
 	// Create and add a mesh to the scene
@@ -209,17 +211,17 @@ void initAntTweakBar(void)
     * Add variables to the tweak bar
     **/
     TwAddVarRW( tweakbar,           		// my tweak bar
-            	"Tesselation Scale",        // name of my variable
+            	"Tessellation",        // name of my variable
             	TW_TYPE_FLOAT,      		// tweak bar type
             	&tessScale,       			// my variable
-           		"min=0 max=50 step=0.05 help=':D'" 
+           		"min=0.05 max=5 step=0.05 help=':D'" 
            		);
 
     TwAddVarRW( tweakbar,           		// my tweak bar
-            	"Martin",        			// name of my variable
+            	"Displacement",        			// name of my variable
             	TW_TYPE_FLOAT,      		// tweak bar type
-            	&testVariable,       		// my variable
-           		" group='Stockholm' label='Martin' min=0 max=2 step=0.05 help='man' "
+            	&dispScale,       			// my variable
+           		"min=0 max=5 step=0.05 help='displacement scale'"
            		);
 
     TwAddButton( tweakbar, 
@@ -252,6 +254,7 @@ void magicTwMouseHoverWrapper(GLFWwindow * window, double x, double y)
 void updateTweakBar(void){
 	// tessellatedMesh->setTessellationScale(tessScale);
 	tessellatedMesh->updateFloatUniform("tessScale", tessScale);
+	tessellatedMesh->updateFloatUniform("dispScale", dispScale);
 }
 
 /****************************** </AntTweakBar> *********************************/
