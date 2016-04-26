@@ -30,11 +30,11 @@ float amplify(float d, float scale, float offset)
 
 void main()
 {
-    //vec3 lightPosition_ws = vec3(0.0, 0.0, 2.0);
+    vec3 lightPosition_ws = vec3(0.0, 0.0, 2.0);
     //vec3 viewDir_ws = normalize(fragPos_ws - cameraPos_ws);
 
-    //vec3 normal_ws = /*normalize(texture(normMap, gTexCoord).xyz);//*/normalize(gFacetNormal);
-    //vec3 lightDirection_ws = normalize(fragPos_ws - lightPosition_ws);
+    vec3 normal_ws = /*normalize(texture(normMap, gTexCoord).xyz);//*/normalize(gFacetNormal);
+    vec3 lightDirection_ws = normalize(fragPos_ws - lightPosition_ws);
 
     //// Diffuse light
     //float diffuseLight = max(0.0, dot(normal_ws, -lightDirection_ws));
