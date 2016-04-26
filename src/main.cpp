@@ -248,7 +248,8 @@ void magicTwMouseHoverWrapper(GLFWwindow * window, double x, double y)
     TwEventMousePosGLFW(x * 2, y * 2);
 }
 
-void updateTweakBar(void){
+void updateTweakBar(void)
+{
 	// tessellatedMesh->setTessellationScale(tessScale);
 	tessellatedMesh->updateFloatUniform("tessScale", tessScale);
 	tessellatedMesh->updateFloatUniform("dispScale", dispScale);
