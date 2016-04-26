@@ -1,10 +1,6 @@
 #version 330 core
 layout(triangles, equal_spacing, ccw) in;
 
-// uniforms
-uniform mat4 MVP;
-uniform sampler2D dispMap;
-
 // input from T.E.S.
 in vec3 tcPosition[];
 in vec3 tcNormal[];
@@ -15,6 +11,11 @@ out vec3 tePosition;
 out vec3 teNormal;
 out vec2 teTexCoord;
 out vec3 tePatchDistance;
+
+// uniforms
+uniform mat4 MVP;
+uniform sampler2D dispMap;
+uniform float dispScale;
 
 /**
 *	Functions interpolate2D and interpolate3D
@@ -47,7 +48,7 @@ void main()
     float tv = teNormal.y / 2.0 + 0.5;
 
 	// Calculate a displacement 
-	float displacement = 0.1 * texture(dispMap, vec2(tu, tv)).x;
+	float displacement = 0.1 * dispScale * texture(dispMap, vec2(tu, tv)).x;
 
 	// Add the displacement
    	tePosition += teNormal * displacement;
