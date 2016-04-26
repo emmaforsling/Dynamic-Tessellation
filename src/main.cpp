@@ -17,8 +17,6 @@ using namespace glm;
 // Source includes
 #include "../extern/OpenGL_Graphics_Engine/include/Scene.h"
 
-// Include Tesselation ShaderManager
-#include "../include/TessellationShaderManager.h"
 
 // Functions
 bool initOpenGL(void);
@@ -142,13 +140,12 @@ bool initScene(void)
 
 	// Create and add a mesh to the scene
 	tessellatedMesh = new Mesh();
-	tessellatedMesh->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
-	
-    tessellatedMesh->setProgramID(LoadShaders( "shaders/tessellation/vertexshader.glsl",
+	// tessellatedMesh->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
+    tessellatedMesh->initShaders( "shaders/tessellation/vertexshader.glsl",
                                          "shaders/tessellation/tessellationcontrolshader.glsl",
                                          "shaders/tessellation/tessellationevaluationshader.glsl",
                                          "shaders/tessellation/geometryshader.glsl",
-                                         "shaders/tessellation/fragmentshader.glsl" ));
+                                         "shaders/tessellation/fragmentshader.glsl" );
     
     tessellatedMesh->setIsTessellationActive(true);
 	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
