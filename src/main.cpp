@@ -142,14 +142,14 @@ bool initScene(void)
 	// Create and add a mesh to the scene
 	tessellatedMesh = new Mesh();
 	// tessellatedMesh->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
-    tessellatedMesh->initShaders( "shaders/tessellation/vertexshader.glsl",
-                                         "shaders/tessellation/tessellationcontrolshader.glsl",
-                                         "shaders/tessellation/tessellationevaluationshader.glsl",
-                                         "shaders/tessellation/geometryshader.glsl",
-                                         "shaders/tessellation/fragmentshader.glsl" );
+    tessellatedMesh->initShaders( 	"shaders/bez_tessellation/vertexshader.glsl",
+                                 	"shaders/bez_tessellation/tessellationcontrolshader.glsl",
+                                    "shaders/bez_tessellation/tessellationevaluationshader.glsl",
+                                    "shaders/bez_tessellation/geometryshader.glsl",
+                                    "shaders/bez_tessellation/fragmentshader.glsl" );
     
     tessellatedMesh->setIsTessellationActive(true);
-	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/sphere.obj");
+	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/susanne.obj");
 	tessellatedMesh->setDispMap("assets/textures/dispMap.png", texHeight, texWidth);
 	tessellatedMesh->setNormMap("assets/textures/normMap.png", texHeight, texWidth);
 	tessellatedMesh->setColorMap("assets/textures/bunny_tex.png", texHeight, texWidth);
@@ -197,8 +197,8 @@ void initAntTweakBar(void)
     TwInit(TW_OPENGL_CORE, NULL);       // for core profile
 
     // Set the size of the graphic window
-    TwWindowSize(WIDTH * 1.96, HEIGHT * 1.96);			// for mac retina 13
-    // TwWindowSize(WIDTH * 1.99, HEIGHT * 1.99);			// for mac retina 15
+    // TwWindowSize(WIDTH * 1.96, HEIGHT * 1.96);			// for mac retina 13
+    TwWindowSize(WIDTH * 1.99, HEIGHT * 1.99);			// for mac retina 15
 
     // // Create a new tweak bar (by calling TWNewBar) and set its size
     tweakbar = TwNewBar("Properties");
