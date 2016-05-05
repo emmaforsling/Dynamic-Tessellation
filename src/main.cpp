@@ -27,7 +27,7 @@ void updateTweakBar(void);
 // Controls
 void magicTwMouseButtonWrapper(GLFWwindow *, int, int, int);
 void magicTwMouseHoverWrapper(GLFWwindow *, double, double);
-void myFunction(void *clientData);
+void toggleDisplacement(void *clientData);
 
 // Variables
 GLFWwindow* window;
@@ -39,6 +39,7 @@ Mesh* tessellatedMesh;
 // AntTweakBar variables
 float tessScale = 1.0;
 float dispScale = 1.0;
+int dispEnabled = 1.0;
 
 
 // Constants
@@ -158,6 +159,7 @@ bool initScene(void)
 	tessellatedMesh->scaleObject(5.0);
 	tessellatedMesh->addFloatUniform("tessScale", 1.0);
 	tessellatedMesh->addFloatUniform("dispScale", 1.0);
+	tessellatedMesh->addFloatUniform("dispEnabled", 1.0);
 	scene->addMesh(tessellatedMesh);
 
 	// Create and add a mesh to the scene
@@ -221,11 +223,11 @@ void initAntTweakBar(void)
            		"min=0 max=5 step=0.05 help='displacement scale'"
            		);
 
-    TwAddButton( tweakbar, 
+    TwAddButton( tweakbar,
     			 "comment1",
-    			 &myFunction,
+    			 &toggleDisplacement,
     			 NULL,
-    			 " label='Life is like a box a chocolates' "
+    			 " label='Toggle displacement' "
     			 ); 
 	
 	glfwSetMouseButtonCallback(window, magicTwMouseButtonWrapper);
@@ -233,9 +235,10 @@ void initAntTweakBar(void)
 
 }
 
-void myFunction(void *clientData)
+void toggleDisplacement(void *clientData)
 {
-	std::cout << "Hej på mig igen " << std::endl;	
+	dispEnabled = !dispEnabled;
+	tessellatedMesh->updateFloatUniform("dispEnabled", dispEnabled);
 }
 
 void magicTwMouseButtonWrapper(GLFWwindow* window, int button, int action, int mods)
