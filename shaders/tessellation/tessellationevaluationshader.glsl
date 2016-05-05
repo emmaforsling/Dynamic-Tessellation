@@ -16,6 +16,7 @@ out vec3 tePatchDistance;
 uniform mat4 MVP;
 uniform sampler2D dispMap;
 uniform float dispScale;
+uniform float dispEnabled;
 
 /**
 *	Functions interpolate2D and interpolate3D
@@ -48,7 +49,7 @@ void main()
     float tv = teNormal.y / 2.0 + 0.5;
 
 	// Calculate a displacement 
-	float displacement = 0.1 * dispScale * texture(dispMap, vec2(tu, tv)).x;
+	float displacement = dispEnabled * 0.1 * dispScale * texture(dispMap, vec2(tu, tv)).x;
 
 	// Add the displacement
    	tePosition += teNormal * displacement;
