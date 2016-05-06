@@ -28,6 +28,7 @@ void updateTweakBar(void);
 void magicTwMouseButtonWrapper(GLFWwindow *, int, int, int);
 void magicTwMouseHoverWrapper(GLFWwindow *, double, double);
 void toggleDisplacement(void *clientData);
+void toggleShowTriangles(void *clientData);
 
 // Variables
 GLFWwindow* window;
@@ -37,9 +38,10 @@ TwBar* tweakbar;
 Mesh* tessellatedMesh;
 
 // AntTweakBar variables
-float tessScale = 1.0;
-float dispScale = 1.0;
-int dispEnabled = 1.0;
+float tessScale 		= 1.0;
+float dispScale 		= 1.0;
+int dispEnabled 		= 1.0;
+int trianglesEnabled 	= 1.0;
 
 
 // Constants
@@ -160,6 +162,7 @@ bool initScene(void)
 	tessellatedMesh->addFloatUniform("tessScale", 1.0);
 	tessellatedMesh->addFloatUniform("dispScale", 1.0);
 	tessellatedMesh->addFloatUniform("dispEnabled", 1.0);
+	tessellatedMesh->addFloatUniform("trianglesEnabled", 1.0);
 	scene->addMesh(tessellatedMesh);
 
 	// Create and add a mesh to the scene
@@ -228,6 +231,13 @@ void initAntTweakBar(void)
     			 &toggleDisplacement,
     			 NULL,
     			 " label='Toggle displacement' "
+    			 );
+
+    TwAddButton( tweakbar,
+    			 "show/hide triangles",
+    			 &toggleShowTriangles,
+    			 NULL,
+    			 " label='Show/Hide triangles' "
     			 ); 
 	
 	glfwSetMouseButtonCallback(window, magicTwMouseButtonWrapper);
@@ -239,6 +249,12 @@ void toggleDisplacement(void *clientData)
 {
 	dispEnabled = !dispEnabled;
 	tessellatedMesh->updateFloatUniform("dispEnabled", dispEnabled);
+}
+
+void toggleShowTriangles(void *clientData)
+{
+	trianglesEnabled = !trianglesEnabled;
+	tessellatedMesh->updateFloatUniform("trianglesEnabled", trianglesEnabled);
 }
 
 void magicTwMouseButtonWrapper(GLFWwindow* window, int button, int action, int mods)
