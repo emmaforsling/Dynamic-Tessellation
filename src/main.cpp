@@ -42,8 +42,8 @@ Mesh* tessellatedMesh;
 float tessScale 		= 1.0;
 float dispScale 		= 1.0;
 int dispEnabled 		= 1.0;
-int trianglesEnabled 	= 1.0;
-int bezierEnabled		= 1.0;
+int trianglesEnabled 	= 0.0;
+int bezierEnabled		= 0.0;
 
 
 // Constants
@@ -163,9 +163,9 @@ bool initScene(void)
 	tessellatedMesh->scaleObject(5.0);
 	tessellatedMesh->addFloatUniform("tessScale", 1.0);
 	tessellatedMesh->addFloatUniform("dispScale", 1.0);
-	tessellatedMesh->addFloatUniform("dispEnabled", 1.0);
-	tessellatedMesh->addFloatUniform("trianglesEnabled", 1.0);
-	tessellatedMesh->addFloatUniform("bezierEnabled", 1.0);
+	tessellatedMesh->addFloatUniform("dispEnabled", dispEnabled);
+	tessellatedMesh->addFloatUniform("trianglesEnabled", trianglesEnabled);
+	tessellatedMesh->addFloatUniform("bezierEnabled", bezierEnabled);
 	scene->addMesh(tessellatedMesh);
 
 	// Create and add a mesh to the scene
@@ -240,14 +240,14 @@ void initAntTweakBar(void)
     			 "show/hide triangles",
     			 &toggleShowTriangles,
     			 NULL,
-    			 " label='Show/Hide triangles' "
+    			 " label='Toggle triangles' "
     			 );
 
     TwAddButton( tweakbar,
     			 "bezier",
     			 &toggleBezier,
     			 NULL,
-    			 " label='Activate/Deactivate Bezier' "
+    			 " label='Toggle smoothing' "
     			 ); 
 	
 	glfwSetMouseButtonCallback(window, magicTwMouseButtonWrapper);

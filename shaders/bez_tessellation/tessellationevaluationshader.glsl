@@ -59,7 +59,7 @@ vec3 interpolate3D(vec3 v0, vec3 v1, vec3 v2)
 **/
 void main()
 {	
-	if(bezierEnabled == 1.0)
+	if(bezierEnabled == 0.0)
 	{
 		// Calculate the position, normal and texture coordiantes for the new point created in the triangle
 		tePosition = interpolate3D(tcPosition[0], tcPosition[1], tcPosition[2]);

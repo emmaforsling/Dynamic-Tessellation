@@ -37,7 +37,7 @@ void main()
     vec3 normal_ws = /*normalize(texture(normMap, gTexCoord).xyz);//*/normalize(gFacetNormal);
     vec3 lightDirection_ws = normalize(fragPos_ws - lightPosition_ws);
 
-    if(trianglesEnabled == 1.0)
+    if(trianglesEnabled == 0.0)
     {
         //Diffuse light
         float diffuseLight = max(0.0, dot(normal_ws, -lightDirection_ws));
