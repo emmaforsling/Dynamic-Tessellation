@@ -29,6 +29,7 @@ void magicTwMouseButtonWrapper(GLFWwindow *, int, int, int);
 void magicTwMouseHoverWrapper(GLFWwindow *, double, double);
 void toggleDisplacement(void *clientData);
 void toggleShowTriangles(void *clientData);
+void toggleBezier(void *clientData);
 
 // Variables
 GLFWwindow* window;
@@ -42,6 +43,7 @@ float tessScale 		= 1.0;
 float dispScale 		= 1.0;
 int dispEnabled 		= 1.0;
 int trianglesEnabled 	= 1.0;
+int bezierEnabled		= 1.0;
 
 
 // Constants
@@ -163,6 +165,7 @@ bool initScene(void)
 	tessellatedMesh->addFloatUniform("dispScale", 1.0);
 	tessellatedMesh->addFloatUniform("dispEnabled", 1.0);
 	tessellatedMesh->addFloatUniform("trianglesEnabled", 1.0);
+	tessellatedMesh->addFloatUniform("bezierEnabled", 1.0);
 	scene->addMesh(tessellatedMesh);
 
 	// Create and add a mesh to the scene
@@ -238,6 +241,13 @@ void initAntTweakBar(void)
     			 &toggleShowTriangles,
     			 NULL,
     			 " label='Show/Hide triangles' "
+    			 );
+
+    TwAddButton( tweakbar,
+    			 "bezier",
+    			 &toggleBezier,
+    			 NULL,
+    			 " label='Activate/Deactivate Bezier' "
     			 ); 
 	
 	glfwSetMouseButtonCallback(window, magicTwMouseButtonWrapper);
@@ -249,6 +259,12 @@ void toggleDisplacement(void *clientData)
 {
 	dispEnabled = !dispEnabled;
 	tessellatedMesh->updateFloatUniform("dispEnabled", dispEnabled);
+}
+
+void toggleBezier(void *clientData)
+{
+	bezierEnabled = !bezierEnabled;
+	tessellatedMesh->updateFloatUniform("bezierEnabled", bezierEnabled);
 }
 
 void toggleShowTriangles(void *clientData)
