@@ -41,7 +41,7 @@ Mesh* tessellatedMesh;
 // AntTweakBar variables
 float tessScale 		= 1.0;
 float dispScale 		= 1.0;
-int dispEnabled 		= 1.0;
+int dispEnabled 		= 0.0;
 int trianglesEnabled 	= 0.0;
 int bezierEnabled		= 0.0;
 
@@ -147,13 +147,12 @@ bool initScene(void)
 	// Create and add a mesh to the scene
 	tessellatedMesh = new Mesh();
 	// tessellatedMesh->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
-    tessellatedMesh->initShaders( 	"shaders/bez_tessellation/vertexshader.glsl",
-                                 	"shaders/bez_tessellation/tessellationcontrolshader.glsl",
-                                    "shaders/bez_tessellation/tessellationevaluationshader.glsl",
-                                    "shaders/bez_tessellation/geometryshader.glsl",
-                                    "shaders/bez_tessellation/fragmentshader.glsl" );
+    tessellatedMesh->initShaders( 	"shaders/tessellation/vertexshader.glsl",
+                                 	"shaders/tessellation/tessellationcontrolshader.glsl",
+                                    "shaders/tessellation/tessellationevaluationshader.glsl",
+                                    "shaders/tessellation/geometryshader.glsl",
+                                    "shaders/tessellation/fragmentshader.glsl" );
     
-    tessellatedMesh->setIsTessellationActive(true);
 	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/susanne.obj");
 	tessellatedMesh->setDispMap("assets/textures/dispMap.png", texHeight, texWidth);
 	tessellatedMesh->setNormMap("assets/textures/normMap.png", texHeight, texWidth);
@@ -163,9 +162,9 @@ bool initScene(void)
 	tessellatedMesh->scaleObject(5.0);
 	tessellatedMesh->addFloatUniform("tessScale", 1.0);
 	tessellatedMesh->addFloatUniform("dispScale", 1.0);
-	tessellatedMesh->addFloatUniform("dispEnabled", dispEnabled);
-	tessellatedMesh->addFloatUniform("trianglesEnabled", trianglesEnabled);
-	tessellatedMesh->addFloatUniform("bezierEnabled", bezierEnabled);
+	tessellatedMesh->addIntegerUniform("dispEnabled", dispEnabled);
+	tessellatedMesh->addIntegerUniform("trianglesEnabled", trianglesEnabled);
+	tessellatedMesh->addIntegerUniform("bezierEnabled", bezierEnabled);
 	scene->addMesh(tessellatedMesh);
 
 	// Create and add a mesh to the scene
@@ -189,15 +188,11 @@ bool initScene(void)
 
 /****************************** <AntTweakBar> *********************************/
 
-float testVariable = 10.0f;
 /**
  *   Initialize the AntTweakBar window and add its variables
 **/
 void initAntTweakBar(void)
 {
-	// Get the values for the tesselated mesh
-	//tessScale = tessellatedMesh->getTessellationScale(); 	   
-
     // Scale the font, since AntTweakBar doesn't like retina displays
     TwDefine(" GLOBAL fontscaling=2 ");
 
@@ -230,24 +225,24 @@ void initAntTweakBar(void)
            		);
 
     TwAddButton( tweakbar,
-    			 "comment1",
-    			 &toggleDisplacement,
-    			 NULL,
-    			 " label='Toggle displacement' "
-    			 );
-
-    TwAddButton( tweakbar,
     			 "show/hide triangles",
     			 &toggleShowTriangles,
     			 NULL,
-    			 " label='Toggle triangles' "
+    			 " group='Toggle' label='Toggle triangles' "
+    			 );
+
+    TwAddButton( tweakbar,
+    			 "comment1",
+    			 &toggleDisplacement,
+    			 NULL,
+    			 " group='Toggle' label='Toggle displacement' "
     			 );
 
     TwAddButton( tweakbar,
     			 "bezier",
     			 &toggleBezier,
     			 NULL,
-    			 " label='Toggle smoothing' "
+    			 " group='Toggle' label='Toggle smoothing' "
     			 ); 
 	
 	glfwSetMouseButtonCallback(window, magicTwMouseButtonWrapper);
@@ -258,19 +253,19 @@ void initAntTweakBar(void)
 void toggleDisplacement(void *clientData)
 {
 	dispEnabled = !dispEnabled;
-	tessellatedMesh->updateFloatUniform("dispEnabled", dispEnabled);
+	tessellatedMesh->updateIntegerUniform("dispEnabled", dispEnabled);
 }
 
 void toggleBezier(void *clientData)
 {
 	bezierEnabled = !bezierEnabled;
-	tessellatedMesh->updateFloatUniform("bezierEnabled", bezierEnabled);
+	tessellatedMesh->updateIntegerUniform("bezierEnabled", bezierEnabled);
 }
 
 void toggleShowTriangles(void *clientData)
 {
 	trianglesEnabled = !trianglesEnabled;
-	tessellatedMesh->updateFloatUniform("trianglesEnabled", trianglesEnabled);
+	tessellatedMesh->updateIntegerUniform("trianglesEnabled", trianglesEnabled);
 }
 
 void magicTwMouseButtonWrapper(GLFWwindow* window, int button, int action, int mods)
@@ -285,7 +280,6 @@ void magicTwMouseHoverWrapper(GLFWwindow * window, double x, double y)
 
 void updateTweakBar(void)
 {
-	// tessellatedMesh->setTessellationScale(tessScale);
 	tessellatedMesh->updateFloatUniform("tessScale", tessScale);
 	tessellatedMesh->updateFloatUniform("dispScale", dispScale);
 }

@@ -16,7 +16,7 @@ uniform sampler2D dispMap;
 uniform sampler2D normMap;
 uniform sampler2D colorMap;
 uniform vec3 cameraPos_ws;
-uniform float trianglesEnabled;
+uniform int trianglesEnabled;
 // Scalars
 uniform float k_diff, k_spec, specPow;
 
@@ -37,7 +37,7 @@ void main()
     vec3 normal_ws = /*normalize(texture(normMap, gTexCoord).xyz);//*/normalize(gFacetNormal);
     vec3 lightDirection_ws = normalize(fragPos_ws - lightPosition_ws);
 
-    if(trianglesEnabled == 1.0)
+    if(trianglesEnabled == 0.0)
     {
         //Diffuse light
         float diffuseLight = max(0.0, dot(normal_ws, -lightDirection_ws));
@@ -63,8 +63,4 @@ void main()
         triangleColors = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * triangleColors;
         fragColor = vec4(triangleColors, 1.0);
     }
-    
-
-    
-    
 }
