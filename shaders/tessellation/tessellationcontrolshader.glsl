@@ -61,14 +61,14 @@ float vij(int i, int j)
 **/
 void determinePatch(){
 	// Take the three points and determine its value 
-	vec3 P0 = vPosition[0];
-	vec3 P1 = vPosition[1];
-	vec3 P2 = vPosition[2];
+	vec3 P0 = vPosition[0];		// p300
+	vec3 P1 = vPosition[1];		// p030
+	vec3 P2 = vPosition[2];		// p003
 	
 	// and its normals
-	vec3 N0 = vNormal[0];
-	vec3 N1 = vNormal[1];
-	vec3 N2 = vNormal[2];
+	vec3 N0 = vNormal[0];		//n300
+	vec3 N1 = vNormal[1];		//n030
+	vec3 N2 = vNormal[2];		//n003
 	
 	// determine the center point for these three points
 	vec3 center = (P0 + P1 + P2)/3.0;
