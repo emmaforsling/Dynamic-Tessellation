@@ -58,7 +58,7 @@ vec3 interpolate3D(vec3 v0, vec3 v1, vec3 v2)
 **/
 void main()
 {	
-	if(bezierEnabled == 1.0)
+	if(bezierEnabled == 1)
 	{
 		vec3 tesscoord_2 = gl_TessCoord * gl_TessCoord;
 		vec3 tesscoord_3 = tesscoord_2 * gl_TessCoord;

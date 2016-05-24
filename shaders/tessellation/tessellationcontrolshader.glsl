@@ -33,6 +33,7 @@ out BezierPatch bezier_cps[];
 // Uniforms
 uniform vec3 cameraPos_ws;
 uniform float tessScale;
+uniform int bezierEnabled;
 
 #define ID gl_InvocationID
 
@@ -49,7 +50,6 @@ float vij(int i, int j)
  vec3 Ni_plus_Nj  = vNormal[i] + vNormal[j];				// V0 + V1	
  return 2.0*dot(Pj_minus_Pi, Ni_plus_Nj)/dot(Pj_minus_Pi, Pj_minus_Pi);
 }
-
 
 /**
 *	Determine the output patch evaluationpoint
@@ -119,7 +119,7 @@ float innerTessLvl_screenSize()
 	float cameraDistance = length(centerPoint - cameraPos_ws);
 
 	// Calculate final screen size measure
-	float screenSizeMeasure = area * visibilityMeasure / cameraDistance;
+	float screenSizeMeasure = area  / cameraDistance;
 
 	// Return tess level based on the measure. [TODO: rewrite!]
 	return 1.0 + floor(screenSizeMeasure * 100.0 * tessScale);
@@ -150,7 +150,7 @@ float outerTessLvl_screenSize(int _vIdx0, int _vIdx1)
 	float visibilityMeasure = pow(max(0.0, dot(normal, -viewDirection)), 1.5);
 
 	// Calculate final screen size measure
-	float screenSizeMeasure = edgeLength * visibilityMeasure / cameraDistance;
+	float screenSizeMeasure = edgeLength  / cameraDistance;
 
 	// Return tess level based on the measure. [TODO: rewrite!]
 	return 1.0 + floor(screenSizeMeasure * 30.0 * tessScale);
@@ -166,11 +166,22 @@ void main()
     // Set the tessellation levels (only at the first ID in each output patch)
     if(ID == 0)
     {
-	    determinePatch();    	
+	    determinePatch();
     	gl_TessLevelInner[0] = tessScale * innerTessLvl_screenSize();
-    	// TODO, fix tessellation cracking!!!!!
-    	gl_TessLevelOuter[0] = tessScale * 5.0; //outerTessLvl_screenSize(0, 1);
-    	gl_TessLevelOuter[1] = tessScale * 5.0; //outerTessLvl_screenSize(1, 2);
-    	gl_TessLevelOuter[2] = tessScale * 5.0; //outerTessLvl_screenSize(2, 0);
+    	
+    	// Tessellation cracking fix. For some reason, the bezier tessellation
+    	// needs another pairing between points and edges. TODO: investigate.
+    	if(bezierEnabled == 1)
+    	{
+			gl_TessLevelOuter[0] = tessScale * outerTessLvl_screenSize(2, 0);
+		    gl_TessLevelOuter[1] = tessScale * outerTessLvl_screenSize(1, 0);
+		    gl_TessLevelOuter[2] = tessScale * outerTessLvl_screenSize(2, 1);
+    	}
+    	else
+    	{
+    		gl_TessLevelOuter[0] = tessScale * outerTessLvl_screenSize(2, 1);
+	    	gl_TessLevelOuter[1] = tessScale * outerTessLvl_screenSize(2, 0);
+	    	gl_TessLevelOuter[2] = tessScale * outerTessLvl_screenSize(1, 0);
+    	}
     }
 }

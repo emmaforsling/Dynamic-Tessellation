@@ -44,7 +44,7 @@ void main()
         vec3 triangleColors = vec3(0.1, 0.1, 0.1) + max(0.0, dot(normal_ws, -lightDirection_ws)) * vec3(1.0, 0.0, 0.0);
         float d1 = min( min(gTriDistance.x, gTriDistance.y), gTriDistance.z );
         float d2 = min( min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z );
-        triangleColors = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * triangleColors;
+        triangleColors = amplify(d1, 40, -0.5) /* amplify(d2, 60, -0.5) */ * triangleColors;
         fragColor = vec4(triangleColors, 1.0);
     }
     else

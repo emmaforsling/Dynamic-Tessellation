@@ -17,7 +17,6 @@ using namespace glm;
 // Source includes
 #include "../extern/OpenGL_Graphics_Engine/include/Scene.h"
 
-
 // Functions
 bool initOpenGL(void);
 bool initScene(void);
@@ -44,7 +43,6 @@ float dispScale 		= 1.0;
 int dispEnabled 		= 0.0;
 int trianglesEnabled 	= 0.0;
 int bezierEnabled		= 0.0;
-
 
 // Constants
 #define WIDTH 1024
@@ -153,7 +151,7 @@ bool initScene(void)
                                     "shaders/tessellation/geometryshader.glsl",
                                     "shaders/tessellation/fragmentshader.glsl" );
     
-	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/bunny.obj");
+	tessellatedMesh->initOBJ("extern/OpenGL_Graphics_Engine/assets/susanne.obj");
 	tessellatedMesh->setDispMap("assets/textures/dispMap.png", texHeight, texWidth);
 	tessellatedMesh->setNormMap("assets/textures/normMap.png", texHeight, texWidth);
 	tessellatedMesh->setColorMap("assets/textures/bunny_tex.png", texHeight, texWidth);
@@ -166,24 +164,6 @@ bool initScene(void)
 	tessellatedMesh->addIntegerUniform("trianglesEnabled", trianglesEnabled);
 	tessellatedMesh->addIntegerUniform("bezierEnabled", bezierEnabled);
 	scene->addMesh(tessellatedMesh);
-
-	// Create and add a mesh to the scene
-	Mesh* notTessellatedMesh = new Mesh();
-	notTessellatedMesh->initShaders("shaders/vertexshader.glsl", "shaders/fragmentshader.glsl");
-	notTessellatedMesh->initOBJ("assets/sphere.obj");
-	notTessellatedMesh->setDispMap("assets/textures/dispMap.png", texHeight, texWidth);
-	notTessellatedMesh->setNormMap("assets/textures/normMap.png", texHeight, texWidth);
-	notTessellatedMesh->setColorMap("assets/textures/bunny_tex.png", texHeight, texWidth);
-	notTessellatedMesh->setMaterialProperties(0.50, 0.50, 40.0);	// diffuse and specular coeff, specular power
-	notTessellatedMesh->setPosition(7.5, 0.0, -10.0);
-	scene->addMesh(notTessellatedMesh);
-
-	// Mesh* cameraMesh = new Mesh();
-	// cameraMesh->initCube(0.25);
-	// cameraMesh->setTexture("assets/textures/bunny_tex.png");
-	// cameraMesh->setMaterialProperties(0.50, 0.50, 40.0);	// diffuse and specular coeff, specular power
-	// cameraMesh->setPosition(0.0, 0.0, 2.0);
-	// scene->addMesh(cameraMesh);
 }
 
 /****************************** <AntTweakBar> *********************************/
