@@ -119,7 +119,7 @@ float innerTessLvl_screenSize()
 	float cameraDistance = length(centerPoint - cameraPos_ws);
 
 	// Calculate final screen size measure
-	float screenSizeMeasure = area  / cameraDistance;
+	float screenSizeMeasure = area /* * visibilityMeasure */ / cameraDistance;
 
 	// Return tess level based on the measure. [TODO: rewrite!]
 	return 1.0 + floor(screenSizeMeasure * 100.0 * tessScale);
@@ -150,7 +150,7 @@ float outerTessLvl_screenSize(int _vIdx0, int _vIdx1)
 	float visibilityMeasure = pow(max(0.0, dot(normal, -viewDirection)), 1.5);
 
 	// Calculate final screen size measure
-	float screenSizeMeasure = edgeLength  / cameraDistance;
+	float screenSizeMeasure = edgeLength /* * visibilityMeasure */ / cameraDistance;
 
 	// Return tess level based on the measure. [TODO: rewrite!]
 	return 1.0 + floor(screenSizeMeasure * 30.0 * tessScale);
