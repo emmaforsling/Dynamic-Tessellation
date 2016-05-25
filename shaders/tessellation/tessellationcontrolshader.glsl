@@ -152,7 +152,7 @@ float outerTessLvl_screenSize(int _vIdx0, int _vIdx1)
 	// Calculate final screen size measure
 	float screenSizeMeasure = edgeLength  / cameraDistance;
 
-	// Return tess level based on the measure. [TODO: rewrite!]
+	// Return tess level based on the measure.
 	return 1.0 + floor(screenSizeMeasure * 30.0 * tessScale);
 }
 
@@ -164,24 +164,25 @@ void main()
     tcTexCoord[ID] = vTexCoord[ID];
 
     // Set the tessellation levels (only at the first ID in each output patch)
-    if(ID == 0)
+    // Tessellation cracking fix. For some reason, the bezier tessellation
+	// needs another pairing between points and edges. TODO: investigate.
+    if(ID == 0 && bezierEnabled == 1)
     {
 	    determinePatch();
     	gl_TessLevelInner[0] = tessScale * innerTessLvl_screenSize();
-    	
-    	// Tessellation cracking fix. For some reason, the bezier tessellation
-    	// needs another pairing between points and edges. TODO: investigate.
-    	if(bezierEnabled == 1)
-    	{
-			gl_TessLevelOuter[0] = tessScale * outerTessLvl_screenSize(2, 0);
-		    gl_TessLevelOuter[1] = tessScale * outerTessLvl_screenSize(1, 0);
-		    gl_TessLevelOuter[2] = tessScale * outerTessLvl_screenSize(2, 1);
-    	}
-    	else
-    	{
-    		gl_TessLevelOuter[0] = tessScale * outerTessLvl_screenSize(2, 1);
-	    	gl_TessLevelOuter[1] = tessScale * outerTessLvl_screenSize(2, 0);
-	    	gl_TessLevelOuter[2] = tessScale * outerTessLvl_screenSize(1, 0);
-    	}
+    		
+    	gl_TessLevelOuter[0] = tessScale * outerTessLvl_screenSize(2, 0);
+	    gl_TessLevelOuter[1] = tessScale * outerTessLvl_screenSize(1, 0);
+	    gl_TessLevelOuter[2] = tessScale * outerTessLvl_screenSize(2, 1);
     }
+    if(ID == 0 && bezierEnabled == 0)
+    {
+    	determinePatch();
+    	gl_TessLevelInner[0] = tessScale * innerTessLvl_screenSize();
+
+    	gl_TessLevelOuter[0] = tessScale * outerTessLvl_screenSize(2, 1);
+    	gl_TessLevelOuter[1] = tessScale * outerTessLvl_screenSize(2, 0);
+    	gl_TessLevelOuter[2] = tessScale * outerTessLvl_screenSize(1, 0);
+    }
+    	
 }
